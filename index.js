@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-
+const userRoutes = require("./routes/user.route.js");
 // This is to parse the incoming request body as JSON
 app.use(express.json()); 
 
@@ -19,22 +19,7 @@ app.get("/", (req, res) => {
     res.send("<h1>Welcome to the best CRUD API ever!</h1><br> <p>This CRUD API is built using Node.JS Express and MongoDB.</p>");
 });
 
-// Post users route
-app.post("/api/users", async (req, res) => {
-    try {
-        const user = await User.create(req.body);
-        console.log(user);
-        res.status(200).json(user);
-    }
-    catch (error) {
-        res.status(500).json({message: error});
-    }
-});
-
-// Get users route
-app.get("/api/users", (req, res) => {
-    res.send("This is the get users route");
-});
+app.use("/api/users", userRoutes);
 
 // Port Listener
 app.listen(3000, () => {
