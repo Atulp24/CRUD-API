@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const userRoutes = require("./routes/user.route.js");
+const userRoutes = require("./routes/user.routes.js");
 // This is to parse the incoming request body as JSON
 app.use(express.json()); 
 
@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
     res.send("<h1>Welcome to the best CRUD API ever!</h1><br> <p>This CRUD API is built using Node.JS Express and MongoDB.</p>");
 });
 
+// These routes are for the USER MANAGEMENT from the database.
 app.use("/api/users", userRoutes);
 
 // Port Listener
