@@ -1,6 +1,10 @@
 const express  = require("express");
 const User = require("../model/user.model.js");
+
+// Destructure the controllers from the controllers file
 const { postRoute, getRoute, getID, putID, deleteID } = require("../controllers/user.controllers.js");
+
+// Router helps in managing the routes for a particular category
 const router = express.Router();
 
 
