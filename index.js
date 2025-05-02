@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+const userRoutes = require('./routes/user.routes.js'); // Importing the routes
 
 // This is to parse the incoming request body as JSON
 app.use(express.json()); 
@@ -10,31 +11,20 @@ const mongoose = require('mongoose');
 const User = require('./model/user.model.js');
 const DBurl = "mongodb+srv://apk200209:Q6yQKe5SmoHpjFkd@cluster0.zfdcjgm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-mongoose.connect(DBurl)
-    .then(() => console.log("Database has been connected!"))
-    .catch((err) => console.log("Database is not able to connect!"));
+mongoose.connect(DBurl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log("Database has been connected!"))
+.catch((err) => console.log("Database is not able to connect!", err));
+
 
 // Home Route
 app.get("/", (req, res) => {
     res.send("<h1>Welcome to the best CRUD API ever!</h1><br> <p>This CRUD API is built using Node.JS Express and MongoDB.</p>");
 });
 
-// Post users route
-app.post("/api/users", async (req, res) => {
-    try {
-        const user = await User.create(req.body);
-        console.log(user);
-        res.status(200).json(user);
-    }
-    catch (error) {
-        res.status(500).json({message: error});
-    }
-});
-
-// Get users route
-app.get("/api/users", (req, res) => {
-    res.send("This is the get users route");
-});
+app.use("/api/users", userRoutes);
 
 // Port Listener
 app.listen(3000, () => {
