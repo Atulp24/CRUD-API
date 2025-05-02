@@ -24,6 +24,8 @@ app.get("/", (req, res) => {
     res.send("<h1>Welcome to the best CRUD API ever!</h1><br> <p>This CRUD API is built using Node.JS Express and MongoDB.</p>");
 });
 
+// User Routes
+// This is where we are using the routes that we created in the routes folder
 app.use("/api/users", userRoutes);
 
 // Port Listener
