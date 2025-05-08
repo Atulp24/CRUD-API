@@ -1,12 +1,44 @@
+const { generateToken, jwtAuth } = require("../middleware/auth.js");
 const User = require("../model/user.model.js");
 
-
+// This is to create a new user in the database
+// Signup route function
 const postRoute = async (req, res) => {
     try {
+        // 1st step -> it creates a user
         const user = await User.create(req.body);
         console.log(user);
-        res.status(200).json(user);
+
+        // 2nd step -> it generates a token A payload is defined
+        // user -> username, email and role
+        const payload = {
+            username: user.username,
+            email: user.email
+        }
+        const token = await generateToken(payload);
+        console.log("This is the token", token);
+        res.status(200).json({user: user, token: token});
     }
+    catch (error) {
+        res.status(500).json({message: error});
+    }
+};
+
+// Login route
+const loginRoute = async (req, res) => {
+    try {
+        const { username } = req.body;
+        const user = await User.findOne({username: username});
+        if(!user) {
+            return res.status(400).json({message: "User not found"});
+        }
+        const payload = {
+            username: user.username,
+            email: user.email
+        }
+        const token = await jwtAuth.Verify(payload);
+        res.status(200).json({user: user, token: token})
+    } 
     catch (error) {
         res.status(500).json({message: error});
     }
@@ -66,4 +98,4 @@ const deleteID = async (req, res) => {
     }
 };
 
-module.exports = { postRoute, getRoute, getID, putID, deleteID };
+module.exports = { postRoute, loginRoute, getRoute, getID, putID, deleteID };

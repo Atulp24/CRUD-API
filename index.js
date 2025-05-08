@@ -18,9 +18,16 @@ mongoose.connect(DBurl, {
 .then(() => console.log("Database has been connected!"))
 .catch((err) => console.log("Database is not able to connect!", err));
 
+// Middleware is a function that is called before any route is allowed
+// Logging middleware
+// next -> Gives a signal to express that middleware has been executed
+const loggingMiddleware = (req, res, next) => {
+    console.log(`[ ${new Date().toTimeString()} ] Method: ${req.method}, URL: localhost:3000${req.url}`);
+    next();
+};
 
 // Home Route
-app.get("/", (req, res) => {
+app.get("/", loggingMiddleware, (req, res) => {
     res.send("<h1>Welcome to the best CRUD API ever!</h1><br> <p>This CRUD API is built using Node.JS Express and MongoDB.</p>");
 });
 
