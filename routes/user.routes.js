@@ -13,14 +13,14 @@ const router = express.Router();
 router.post("/signup", postRoute);
 
 // Login route
-router.post("/login", jwtAuth, loginRoute);
+router.post("/login", loginRoute);
 
 // Get users route
 router.get("/", getRoute);
 
 // Dynamic routing
 // Quering and we do it by query parameters
-router.get("/:id", getID);
+router.get("/:id", jwtAuth, getID);
 
 // Updating route
 router.put("/:id", putID);

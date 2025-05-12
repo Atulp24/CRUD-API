@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "This is the best crud api",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",

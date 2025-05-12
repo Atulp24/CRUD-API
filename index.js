@@ -21,19 +21,19 @@ mongoose.connect(DBurl, {
 // Middleware is a function that is called before any route is allowed
 // Logging middleware
 // next -> Gives a signal to express that middleware has been executed
-const loggingMiddleware = (req, res, next) => {
-    console.log(`[ ${new Date().toTimeString()} ] Method: ${req.method}, URL: localhost:3000${req.url}`);
+const logRequest = (req, res, next) => {
+    console.log(`Request made to ${req.url} with method ${req.method} on time ${new Date()}`);
     next();
 };
 
 // Home Route
-app.get("/", loggingMiddleware, (req, res) => {
+app.get("/", logRequest, (req, res) => {
     res.send("<h1>Welcome to the best CRUD API ever!</h1><br> <p>This CRUD API is built using Node.JS Express and MongoDB.</p>");
 });
 
 // User Routes
 // This is where we are using the routes that we created in the routes folder
-app.use("/api/users", userRoutes);
+app.use("/api/users", logRequest, userRoutes);
 
 // Port Listener
 app.listen(3000, () => {

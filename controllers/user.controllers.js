@@ -7,16 +7,15 @@ const postRoute = async (req, res) => {
     try {
         // 1st step -> it creates a user
         const user = await User.create(req.body);
-        console.log(user);
+        //console.log(user);
 
         // 2nd step -> it generates a token A payload is defined
         // user -> username, email and role
         const payload = {
             username: user.username,
-            email: user.email
         }
         const token = await generateToken(payload);
-        console.log("This is the token", token);
+        //console.log("This is the token", token);
         res.status(200).json({user: user, token: token});
     }
     catch (error) {
@@ -27,17 +26,24 @@ const postRoute = async (req, res) => {
 // Login route
 const loginRoute = async (req, res) => {
     try {
-        const { username } = req.body;
+        const { username, password } = req.body;
         const user = await User.findOne({username: username});
         if(!user) {
             return res.status(400).json({message: "User not found"});
         }
+
+        // Check the password from bcrypt
+        const isPasswordValid = await user.comparePassword(password);
+        if(!isPasswordValid) {
+            return res.status(400).json({message: "Username or Password is incorrect"});
+        }
+
         const payload = {
             username: user.username,
-            email: user.email
         }
         const token = await jwtAuth.Verify(payload);
-        res.status(200).json({user: user, token: token})
+        // res.status(200).json({user: user, token: token});
+        res.status(200).json("Successfully logged in");
     } 
     catch (error) {
         res.status(500).json({message: error});
@@ -88,8 +94,9 @@ const putID = async (req, res) => {
 const deleteID = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
-        if(!user) {
-            res.status(404).json({message: "User not found"});
+
+        if(!user || user.comparePassword(req.body.password)) {
+            res.status(404).json({message: "Username or Password is incorrect"});
         }
         res.status(200).json({message: "User has been deleted successfully"});
     } 
